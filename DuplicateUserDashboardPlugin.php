@@ -73,7 +73,7 @@ class DuplicateUserDashboardPlugin extends BasePlugin
 
         // Pass scope for php 5.3 users
         $controller = $this;
-        
+
         craft()->on('userSession.onLogin', function(Event $event) use ($controller) {
 
             if(isset(craft()->userSession->getUser()->id)) {
