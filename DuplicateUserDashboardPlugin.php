@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: jbreact
- * Date: 10/03/15
- * Time: 11:10
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Craft;
 
@@ -18,7 +11,7 @@ class DuplicateUserDashboardPlugin extends BasePlugin
 
     function getVersion()
     {
-        return '0.1';
+        return '0.1.2';
     }
 
     function getDeveloper()
@@ -34,7 +27,6 @@ class DuplicateUserDashboardPlugin extends BasePlugin
     {
         return array(
             'userIdToDuplicate' => ''
-            //'accountApiKey' => ''
         );
     }
     public function getSettingsHtml()
@@ -49,7 +41,6 @@ class DuplicateUserDashboardPlugin extends BasePlugin
         return WidgetRecord::model()->ordered()->findAllByAttributes(array(
             'userId' => $userID,
             'enabled' => 1
-            //'userId' => craft()->userSession->getUser()->id
         ));
     }
 
@@ -63,25 +54,26 @@ class DuplicateUserDashboardPlugin extends BasePlugin
                 $userIdToDuplicate = $this->getSettings()->userIdToDuplicate;
                 $userId = craft()->userSession->getUser()->id;
 
-                    if($userId != $userIdToDuplicate) {
+                //If user is not the master remove the edit dashboard button
+                if($userId != $userIdToDuplicate) {
 
-                        craft()->templates->includeCss('a.settings { display:none !important }');
+                    craft()->templates->includeCss('a.settings { display:none !important }');
 
-                    }
+                }
 
-                    if($userId == $userIdToDuplicate) {
+                if($userId == $userIdToDuplicate) {
 
-                        craft()->userSession->setFlash('error','Your dashboard is mirrored to other users, edit with caution.');
+                    craft()->userSession->setFlash('error','Your dashboard is mirrored to other users, edit with caution.');
 
-                    }
+                }
 
             }
+
         }
 
-
+        // Pass scope for php 5.3 users
         $controller = $this;
-
-
+        
         craft()->on('userSession.onLogin', function(Event $event) use ($controller) {
 
             if(isset(craft()->userSession->getUser()->id)) {
@@ -96,20 +88,19 @@ class DuplicateUserDashboardPlugin extends BasePlugin
                         ->select('*')
                         ->delete('widgets', array('userId' => craft()->userSession->getUser()->id));
 
-                          $widgetRecords = $controller->getUserWidgetRecords($userIdToDuplicate);
-                          $widgetModels = WidgetModel::populateModels($widgetRecords);
+                    $widgetRecords = $controller->getUserWidgetRecords($userIdToDuplicate);
+                    $widgetModels = WidgetModel::populateModels($widgetRecords);
 
-                          foreach($widgetModels as $widgetModel) {
-                              $widgetModel->id = NULL;
-                              craft()->dashboard->saveUserWidget($widgetModel);
-                          }
+                    foreach($widgetModels as $widgetModel) {
+                      $widgetModel->id = NULL;
+                      craft()->dashboard->saveUserWidget($widgetModel);
+                    }
 
                 }
             }
 
         });
 
-
-
     }
+
 }
