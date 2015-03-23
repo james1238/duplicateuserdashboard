@@ -1,18 +1,6 @@
 {% import "_includes/forms" as forms %}
-{% set users = craft.users.getAllUsers() %}
-       {% set label = {"9":"test"} %}
-       {% set value = {} %}
-
-
-
-
-
-{ php: "PHP Mail"|t, sendmail: "Sendmail"|t, smtp: "SMTP"|t, pop: "POP"|t, gmail: "Gmail"|t },
 
     <div>
-
-
-
 
         {{ forms.selectField({
             label: "Account API Key"|t,
@@ -23,7 +11,6 @@
             errors: settings.getErrors('userIdToDuplicate'),
             value: settings.userIdToDuplicate
         }) }}
-
 
 
     </div>
