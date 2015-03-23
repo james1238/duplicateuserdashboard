@@ -1,7 +1,7 @@
 # DuplicateUserDashboard
 Mirror a master users dashboard across backend users on Craft CMS.
 
-Note: This plugin replaces users dashboard widget on every login - if a user makes a chnage it will be lost the next time they log in.
+Note: This plugin replaces users dashboard widget on every login - if a user makes a change it will be lost the next time they log in.
 
 # Setup
 
