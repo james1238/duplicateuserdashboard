@@ -12,7 +12,7 @@ class DuplicateUserDashboardVariable
     public function getUsersIdAndName()
     {
         $users = craft()->elements->getCriteria(ElementType::User);
-        $usersAndIdArr = [];
+        $usersAndIdArr = array();
         foreach($users as $user){
             $usersAndIdArr[$user->id] = $user->name;
         }
