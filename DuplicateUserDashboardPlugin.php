@@ -11,7 +11,7 @@ class DuplicateUserDashboardPlugin extends BasePlugin
 
     function getVersion()
     {
-        return '0.1.2';
+        return '0.1.3';
     }
 
     function getDeveloper()
@@ -45,6 +45,9 @@ class DuplicateUserDashboardPlugin extends BasePlugin
     }
 
     public function init(){
+        
+        if(craft()->isConsole())
+            return;
 
         // ToDo - Refactor this
         if(isset(craft()->userSession->getUser()->id)) {
@@ -93,8 +96,12 @@ class DuplicateUserDashboardPlugin extends BasePlugin
                     $widgetModels = WidgetModel::populateModels($widgetRecords);
 
                     foreach($widgetModels as $widgetModel) {
-                      $widgetModel->id = NULL;
-                      craft()->dashboard->saveUserWidget($widgetModel);
+                        // Check widget is valid
+                        if( $widgetModel && $widgetType = craft()->dashboard->populateWidgetType($widgetModel) ){
+                            $widgetModel->id = NULL;
+                            craft()->dashboard->saveUserWidget($widgetModel);
+                            craft()->dashboard->changeWidgetColspan($widgetModel->id,$widgetModel->colspan);
+                        }
                     }
 
                 }
